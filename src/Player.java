@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Player {
     private int maxPly;
     private int ply;
@@ -9,6 +11,8 @@ public class Player {
     private String name;
     private String kit;
     private boolean isDefend;
+    private boolean isBrace;
+    private ArrayList<Item> items;
 
     public Player(int hp, int shld, int dmg, String name, String kit, int p) {
         maxHealth = hp;
@@ -19,6 +23,8 @@ public class Player {
         this.kit = kit;
         maxPly = p;
         ply = p;
+        items = new ArrayList<Item>();
+        isBrace = false;
     }
 
     public int getHealth() {
@@ -49,12 +55,28 @@ public class Player {
         return maxPly;
     }
 
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public ArrayList<Item> getItemList() {
+        return items;
+    }
+
     public boolean isDefend() {
         return isDefend;
     }
 
+    public boolean isBrace() {
+        return isBrace;
+    }
+
     public void setHealth(int hp) {
         health = hp;
+    }
+
+    public void setMaxHealth(int hp) {
+        maxHealth = hp;
     }
 
     public void setShield(int shld) {
@@ -69,8 +91,20 @@ public class Player {
         ply = p;
     }
 
+    public void setMaxPly(int p) {
+        maxPly = p;
+    }
+
     public void setDefend(boolean d) {
         isDefend = d;
+    }
+
+    public void setIsBrace(boolean b) {
+        isBrace = b;
+    }
+
+    public void addItem(Item i) {
+        items.add(i);
     }
 
     public String toString() {
@@ -89,9 +123,8 @@ public class Player {
         return ply - p >= 0;
     }
 
-    public void useKit() {
-        if (kit.equals("archer")) {
-
-        }
+    public void recover() {
+        health = maxHealth;
+        ply = maxPly;
     }
 }

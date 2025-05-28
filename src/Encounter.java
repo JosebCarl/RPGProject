@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Encounter {
-    public ArrayList<Enemy> enemies;
+    private ArrayList<Enemy> enemies;
 
     public Encounter(ArrayList<Enemy> e) {
         enemies = e;
@@ -19,7 +19,7 @@ public class Encounter {
             for (int i = 1; i < enemies.size() - 1; i++) {
                 System.out.print(", " + enemies.get(i).getName());
             }
-            System.out.print(" and " + enemies.getLast().getName());
+            System.out.print(", and " + enemies.getLast().getName());
         }
         System.out.println(" appeared!\nWhat do you do?");
     }
@@ -97,11 +97,10 @@ public class Encounter {
             }
             enemyList(p, true);
             if (p.checkPly(temp)) {
-                System.out.println(p.line() + "\nWhich enemy would you like to attack?");
+                System.out.println(p.line() + "\nWhich enemy would you like to attack?\n0) Back");
                 for (int i = 0; i < enemies.size(); i++) {
-                    System.out.println((i + 1) + ") " + enemies.get(i).getName() + " " + enemies.get(i).getHealth() + "/" + enemies.get(i).getMaxHealth());
+                    System.out.println((i + 1) + ") " + enemies.get(i).getName());
                 }
-                System.out.println("\n0) Back");
                 int next = choice.nextInt();
                 if (next > 0 && next < enemies.size() + 1) {
                     int before = enemies.get(next - 1).getHealth();
@@ -124,7 +123,45 @@ public class Encounter {
                 System.out.println("You don't have enough stamina!");
             }
         } else if (option == 3) { //Item
-            System.out.println(p.space() + "Not done yet!");
+            if (!p.getItemList().isEmpty()) {
+                enemyList(p, true);
+                System.out.println(p.line() + "\nWhich item would you like to use?\n0) Back");
+                for (int item = 0; item < p.getItemList().size(); item++) {
+                    System.out.println((item + 1) + ") " + p.getItemList().get(item).getAbility());
+                }
+                int next = choice.nextInt();
+                if (next > 0 && next < p.getItemList().size() + 1) {
+                    if (p.checkPly(p.getItemList().get(next - 1).getCost())) {
+                        if (p.getItemList().get(next - 1).getName().equals("Combat Staff")) {
+                            System.out.println(p.line() + "\nWhich enemy would you like to target?\n0) Back");
+                            for (int i = 0; i < enemies.size(); i++) {
+                                System.out.println((i + 1) + ") " + enemies.get(i).getName());
+                            }
+                            int next2 = choice.nextInt();
+                            if (next2 > 0 && next < enemies.size() + 1) {
+                                System.out.println(p.space() + p.line());
+                                if (enemies.get(next2 - 1).specialTrue()) {
+                                    enemies.get(next2 - 1).useSpecialText();
+                                }
+                                p.getItemList().get(next - 1).useAbility(enemies.get(next2 - 1), p);
+                                System.out.println(p.line());
+                                enemyList(p,false);
+                            }
+                        } else {
+                            enemyList(p,true);
+                            p.getItemList().get(next - 1).useAbility(enemies.getFirst(), p);
+                        }
+
+                    } else {
+                        enemyList(p,true);
+                        System.out.println(p.line());
+                        System.out.println("You don't have enough stamina!");
+                    }
+
+                }
+            } else {
+                System.out.println("You do not have any items at the current moment.");
+            }
         } else if (option == 4) { //Defend
             if (p.checkPly(4)) {
                 p.setDefend(true);
@@ -137,9 +174,5 @@ public class Encounter {
         } else if (option == 5) {
             p.setPly(-1);
         }
-    }
-
-    public void choice2(int option) {
-
     }
 }

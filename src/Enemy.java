@@ -99,9 +99,9 @@ public class Enemy {
 
     //Calculates the incoming damage
 
-    public void calculateDMG(Player p, int option) {
+    public void calculateDMG(Player p, double multiplier) {
         double reduction = (this.shield * 0.01);
-        this.setHealth(this.health - (int) (p.getAttack() * option * (1 - reduction)));
+        this.setHealth(this.health - (int) (p.getAttack() * multiplier * (1 - reduction)));
         if (this.health <= 0) {
             alive = false;
             health = 0;

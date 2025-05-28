@@ -9,7 +9,7 @@ public class Slime extends Enemy {
         if (c.equals("Blue")) {
             this.setName("Blue Slime");
             this.setShield(50);
-        } else if (c.equals("pink")) {
+        } else if (c.equals("Pink")) {
             this.setName("Pink Slime");
             this.setHealth(20);
             this.setAttack(16);

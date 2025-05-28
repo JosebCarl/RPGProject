@@ -58,13 +58,9 @@ public class Game {
         String ready = user.next();
 
         if (!ready.isEmpty()) {
-            Slime slime = new Slime("Blue");
-            Goblin goblin = new Goblin();
             ArrayList<Enemy> encounter1 = new ArrayList<Enemy>();
-            encounter1.add(slime);
-            encounter1.add(goblin);
-            encounter1.add(new Slime("Pink"));
-            encounter1.add(new Goblin("Archer"));
+            encounter1.add(new Slime());
+            //encounter1.add(new Slime("Blue"));
             Encounter e1 = new Encounter(encounter1);
             e1.intro(player);
             e1.enemyList(player, false);
@@ -75,6 +71,49 @@ public class Game {
                     e1.choice1(option, player);
                 }
                 e1.enemiesAttack(player);
+                player.setPly(player.getMaxPly());
+            }
+        }
+
+        System.out.println(player.line() + "\nCongratulations on beating your first encounter " + n + "!\nAre you ready to continue?");
+        ArrayList<Item> remainingItems = new ArrayList<Item>();
+        remainingItems.add(new Staff("Healing"));
+        remainingItems.add(new Staff("Combat"));
+        remainingItems.add(new Armor("Boots"));
+        remainingItems.add(new Armor("ChestPlate"));
+        remainingItems.add(new Armor("Helmet"));
+        ready = user.next();
+
+        if (!ready.isEmpty()) {
+            GracePeriod gPeriod1 = new GracePeriod(remainingItems);
+            int current = player.getItemList().size();
+            while (current == player.getItemList().size()) {
+                gPeriod1.itemList(player);
+                int option = user.nextInt();
+                gPeriod1.choice2(option, player);
+            }
+            player.getItemList().getLast().applyBoosts(player);
+        }
+
+        System.out.println("Are you ready to continue?");
+        ready = user.next();
+        player.recover();
+
+        if (!ready.isEmpty()) {
+            ArrayList<Enemy> encounter2 = new ArrayList<Enemy>();
+            encounter2.add(new Slime());
+            encounter2.add(new Goblin());
+            encounter2.add(new Goblin("Archer"));
+            Encounter e2 = new Encounter(encounter2);
+            e2.intro(player);
+            e2.enemyList(player, false);
+            while (player.getHealth() > 0 && e2.enemiesAlive()) {
+                while (player.getPly() != -1) {
+                    e2.decision(player);
+                    int option = user.nextInt();
+                    e2.choice1(option, player);
+                }
+                e2.enemiesAttack(player);
                 player.setPly(player.getMaxPly());
             }
         }
